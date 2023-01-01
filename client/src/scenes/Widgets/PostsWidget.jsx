@@ -9,20 +9,23 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const res = await fetch("http://localhost:5000/posts", {
+    const response = await fetch("http://localhost:5000/posts", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = await res.json();
+    const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
 
   const getUserPosts = async () => {
-    const res = await fetch(`http://localhost:5000/posts/${userId}/posts`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
+    const response = await fetch(
+      `http://localhost:5000/posts/${userId}/posts`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
 
@@ -33,7 +36,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       getPosts();
     }
   }, []);
-
   return (
     <>
       {posts.map(

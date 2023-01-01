@@ -27,7 +27,6 @@ export const createPost = async (req, res) => {
       comments: [],
     });
 
-    //we shouldn't return the posts, that's done by getposts. TODO: test this
     const posts = await Post.find();
     res.status(201).json(posts);
   } catch (err) {
