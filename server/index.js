@@ -4,6 +4,8 @@ import connectDB from "./config/db.js";
 import logger from "morgan";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import postRoutes from "./routes/posts.js";
 
 config({ path: "./config/.env" });
 const PORT = process.env.PORT || 5000;
@@ -21,6 +23,8 @@ app.use(
 );
 
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}!`);

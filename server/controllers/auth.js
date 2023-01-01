@@ -5,31 +5,21 @@ import cloudinary from "../middleware/cloudinary.js";
 
 export const register = async (req, res) => {
   let cloudinaryPicture;
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    picturePath,
-    friends,
-    location,
-    ocupation,
-  } = req.body;
-  console.log(req.body);
+  const { firstName, lastName, email, friends, location, ocupation } = req.body;
   try {
-    if (picturePath) {
-      cloudinaryPicture = await cloudinary.uploader.upload(picturePath);
+    if (req.file) {
+      cloudinaryPicture = await cloudinary.uploader.upload(req.file.path);
     }
 
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     const user = await User.create({
       firstName,
       lastName,
       email,
       password: hashedPassword,
-      picturePath,
+      picturePath: cloudinaryPicture.secure_url || "",
       friends,
       location,
       ocupation,
@@ -37,9 +27,26 @@ export const register = async (req, res) => {
       viewedProfile: Math.floor(Math.random() * 10000),
       impressions: Math.floor(Math.random() * 10000),
     });
-    console.log(user);
-    //delete user.passwor;
-    res.status(201).json(user);
+
+    const { password, ...others } = user._doc;
+    res.status(201).json(others);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) return res.status(400).json({ error: "User not found" });
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const { password, ...others } = user._doc;
+
+    res.status(200).json({ token, others });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
