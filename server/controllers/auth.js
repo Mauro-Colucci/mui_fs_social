@@ -5,10 +5,13 @@ import cloudinary from "../middleware/cloudinary.js";
 
 export const register = async (req, res) => {
   let cloudinaryPicture;
-  const { firstName, lastName, email, friends, location, ocupation } = req.body;
+  const { firstName, lastName, email, friends, location, occupation } =
+    req.body;
   try {
     if (req.file) {
-      cloudinaryPicture = await cloudinary.uploader.upload(req.file.path);
+      cloudinaryPicture = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "muiSocial",
+      });
     }
 
     const salt = await bcrypt.genSalt();
@@ -22,7 +25,7 @@ export const register = async (req, res) => {
       picturePath: cloudinaryPicture.secure_url || "",
       friends,
       location,
-      ocupation,
+      occupation,
       //for ui purposes
       viewedProfile: Math.floor(Math.random() * 10000),
       impressions: Math.floor(Math.random() * 10000),
@@ -45,8 +48,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     const { password, ...others } = user._doc;
-
-    res.status(200).json({ token, others });
+    res.status(200).json({ token, user: others });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

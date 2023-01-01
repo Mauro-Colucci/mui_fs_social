@@ -9,7 +9,9 @@ export const createPost = async (req, res) => {
     if (req.file) {
       //if doing update we need to add a new field in the schema to store the cloudinaryid so we can:
       //await cloudinary.uploader.destroy(post.cloudinaryId)
-      cloudinaryPicture = await cloudinary.uploader.upload(req.file.path);
+      cloudinaryPicture = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "muiSocial",
+      });
     }
     const user = await User.findById(userId);
     //postschema should have an objectid type ref of user...

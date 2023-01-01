@@ -11,10 +11,10 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-//import { useDispatch } from "react-redux";
-//import { setLogin } from "../state";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../state";
 import Dropzone from "react-dropzone";
-import FlexBetween from "../components/FlexBetween";
+import FlexBetween from "../../components/FlexBetween";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -48,15 +48,14 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("login");
-  //const { palette } = useTheme();
-  //const dispatch = useDispatch();
+  const { palette } = useTheme();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
@@ -87,12 +86,12 @@ const Form = () => {
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {
-      /*  dispatch(
+      dispatch(
         setLogin({
           user: loggedIn.user,
           token: loggedIn.token,
         })
-      ); */
+      );
       navigate("/home");
     }
   };
@@ -122,9 +121,9 @@ const Form = () => {
           <Box
             display="grid"
             gap="30px"
-            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+            gridTemplateColumns="repeat(2, minmax(0, 1fr))"
             sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 2" },
             }}
           >
             {isRegister && (
@@ -139,7 +138,6 @@ const Form = () => {
                     Boolean(touched.firstName) && Boolean(errors.firstName)
                   }
                   helperText={touched.firstName && errors.firstName}
-                  sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Last Name"
@@ -149,7 +147,6 @@ const Form = () => {
                   name="lastName"
                   error={Boolean(touched.lastName) && Boolean(errors.lastName)}
                   helperText={touched.lastName && errors.lastName}
-                  sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Location"
@@ -159,7 +156,7 @@ const Form = () => {
                   name="location"
                   error={Boolean(touched.location) && Boolean(errors.location)}
                   helperText={touched.location && errors.location}
-                  sx={{ gridColumn: "span 4" }}
+                  sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Occupation"
@@ -171,11 +168,11 @@ const Form = () => {
                     Boolean(touched.occupation) && Boolean(errors.occupation)
                   }
                   helperText={touched.occupation && errors.occupation}
-                  sx={{ gridColumn: "span 4" }}
+                  sx={{ gridColumn: "span 2" }}
                 />
                 <Box
-                  gridColumn="span 4"
-                  /*  border={`1px solid ${palette.neutral.medium}`} */
+                  gridColumn="span 2"
+                  border={`1px solid ${palette.neutral.medium}`}
                   borderRadius="5px"
                   p="1rem"
                 >
@@ -189,16 +186,17 @@ const Form = () => {
                     {({ getRootProps, getInputProps }) => (
                       <Box
                         {...getRootProps()}
-                        /* border={`2px dashed ${palette.primary.main}`} */
+                        border={`2px dashed ${palette.primary.main}`}
                         p="1rem"
                         sx={{ "&:hover": { cursor: "pointer" } }}
                       >
                         <input {...getInputProps()} />
                         {!values.picture ? (
-                          <p>Add Picture Here</p>
+                          <p>Drop/Add Image Here</p>
                         ) : (
                           <FlexBetween>
                             <Typography>{values.picture.name}</Typography>
+                            {/* todo: add a small preview image */}
                             <EditOutlinedIcon />
                           </FlexBetween>
                         )}
@@ -217,7 +215,7 @@ const Form = () => {
               name="email"
               error={Boolean(touched.email) && Boolean(errors.email)}
               helperText={touched.email && errors.email}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             <TextField
               label="Password"
@@ -228,7 +226,7 @@ const Form = () => {
               name="password"
               error={Boolean(touched.password) && Boolean(errors.password)}
               helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
           </Box>
 
@@ -240,9 +238,9 @@ const Form = () => {
               sx={{
                 m: "2rem 0",
                 p: "1rem",
-                /*  backgroundColor: palette.primary.main,
+                backgroundColor: palette.primary.main,
                 color: palette.background.alt,
-                "&:hover": { color: palette.primary.main }, */
+                "&:hover": { color: palette.primary.main },
               }}
             >
               {isLogin ? "LOGIN" : "REGISTER"}
@@ -254,11 +252,11 @@ const Form = () => {
               }}
               sx={{
                 textDecoration: "underline",
-                /*  color: palette.primary.main,
+                color: palette.primary.main,
                 "&:hover": {
                   cursor: "pointer",
                   color: palette.primary.light,
-                }, */
+                },
               }}
             >
               {isLogin
