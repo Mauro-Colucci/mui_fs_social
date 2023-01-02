@@ -8,7 +8,7 @@ import PostsWidget from "./Widgets/PostsWidget";
 import UserWidget from "./Widgets/UserWidget";
 
 const HomePage = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const isNonMobile = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
 
   return (
@@ -17,21 +17,18 @@ const HomePage = () => {
       <Box
         width="100%"
         padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
+        display={isNonMobile ? "flex" : "block"}
         gap="0.5rem"
         justifyContent="space-between"
       >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+        <Box flexBasis={isNonMobile && "26%"}>
           <UserWidget userId={_id} picturePath={picturePath} />
         </Box>
-        <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
-        >
+        <Box flexBasis={isNonMobile && "42%"} mt={!isNonMobile && "2rem"}>
           <MyPostWidget picturePath={picturePath} />
           <PostsWidget userId={_id} />
         </Box>
-        {isNonMobileScreens && (
+        {isNonMobile && (
           <Box flexBasis="26%">
             <AdvertWidget />
             <Box m="2rem 0" />

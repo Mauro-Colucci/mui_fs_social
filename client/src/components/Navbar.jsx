@@ -30,7 +30,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -57,7 +57,7 @@ const Navbar = () => {
         >
           Sociopedia
         </Typography>
-        {isNonMobileScreens && (
+        {isNonMobile && (
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
@@ -73,7 +73,7 @@ const Navbar = () => {
       </FlexBetween>
 
       {/* DESKTOP NAV */}
-      {isNonMobileScreens ? (
+      {isNonMobile ? (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
@@ -119,7 +119,7 @@ const Navbar = () => {
       )}
 
       {/* MOBILE NAV */}
-      {!isNonMobileScreens && isMobileMenuToggled && (
+      {!isNonMobile && isMobileMenuToggled && (
         <Box
           position="fixed"
           right="0"

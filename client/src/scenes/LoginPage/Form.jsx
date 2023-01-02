@@ -123,7 +123,7 @@ const Form = () => {
             gap="30px"
             gridTemplateColumns="repeat(2, minmax(0, 1fr))"
             sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 2" },
+              "& > div": { gridColumn: !isNonMobile && "span 2" },
             }}
           >
             {isRegister && (
